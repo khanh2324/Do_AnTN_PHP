@@ -21,7 +21,8 @@
 	<!-- <LINK href="https://demo.opencart.com/image/catalog/cart.png" rel="icon"> -->
 	<LINK href="<?php echo web_icon_url(); ?>" rel="icon">
 
-	<LINK href="/ui/home/opencart_000/template_files/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
+	<!-- <LINK href="/ui/home/opencart_000/template_files/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen"> -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<LINK href="/ui/home/opencart_000/template_files/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen">
 	<LINK href="/ui/home/opencart_000/template_files/css.css" rel="stylesheet" rel="stylesheet" type="text/css" media="screen">
 	<LINK href="/ui/home/opencart_000/template_files/stylesheet.css" rel="stylesheet" type="text/css" media="screen">
@@ -323,49 +324,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="container">
-				 <div class="col-sm-3">
-					<h5>Thông Tin</h5>
-					<ul class="list-unstyled">
-						<li><a href="/about.php">Giới Thiệu</a></li>
-						<li><a href="/contact.php">Liên Hệ</a></li>
-						<li><a href="#">Bản Đồ Site</a></li>
-						<li><a href="#5">Điều Khoản Sử Dụng</a></li>
-					</ul>
-				</div>
-				<div class="col-sm-3">
-					<h5>Dịch Vụ Khách Hàng</h5>
-					<ul class="list-unstyled">
-						<li><a href="#">Phiếu Quà Tặng</a></li>
-						<li><a href="#6">Thông Tin Giao Hàng</a></li>
-						<li><a href="#">Quy Định Đổi Trả Hàng</a></li>
-						<li><a href="#3">Chính Sách Quyền Riêng Tư</a></li>
-					</ul>
-				</div>
-				<div class="col-sm-3">
-					<h5>Thông Tin Thêm</h5>
-					<ul class="list-unstyled">
-						<li><a href="#">Blog</a></li>
-						<li><a href="#">Thương Hiệu</a></li>
-						<li><a href="#">Tiếp Thị Liên Kết</a></li>
-						<li><a href="#">Sản Phẩm Đặc Biệt</a></li>
-					</ul>
-				</div>
-				<div class="col-sm-3">
-					<h5>Tài Khoản</h5>
-					<ul class="list-unstyled">
-						<li><a href="#">Tài Khoản Của Tôi</a></li>
-						<li><a href="#">Lịch Sử Đơn Hàng</a></li>
-						<li><a href="#">Wish List</a></li>
-						<li><a href="#">Thư Thông Báo</a></li>
-					</ul>
-				</div>
-			</div>
-
-			<hr>
-
-		</div> -->
-
 	</footer>
 </BODY>
 
