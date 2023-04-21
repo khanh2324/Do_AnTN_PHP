@@ -1,27 +1,7 @@
 <?php
 /**
  * Copyright C2009G
- File:    configs.php
- Tóm tắt: Cấu hình hệ thống.
- Mô tả:   Cấu hình các thông tin:
- - máy chủ cơ sở dữ liệu, 
- - thư mục chứa mã nguồn ứng dụng, 
- - thư mục chứa các file layout của trang chủ/trang quản trị/trang đăng nhập quản trị,
- 
- Nên dùng lệnh include_once() thay vì các lệnh khác như include(), require(), require_once()
- bởi vì lệnh này chỉ gọi thư viện một lần, và nếu có lỗi thì nó cũng chỉ cảnh báo
- và script vẫn chạy tiếp. Hơn nữa lệnh này gần với #include của C.
- 
- XAMPP Control Panel v3.2.1
- PHP 5.5.6
- 
- Cả Windows & Linux đều hỗ trợ dấu phân cách thư mục '/'
- nên ko cần lo lắng về việc chuyển đổi qua lại. Ví dụ:
- 	C:\xampp\php\ext = C:/xampp/php/ext
- 
- http://code.stephenmorley.org/articles/xampp-version-history-apache-mysql-php/
- https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/
- 
+
  */
 
 // Thiết lập chế độ hiển thị lỗi.
@@ -40,7 +20,7 @@ define('DB_PASS', '');
 
 $home_themes = 'opencart_000';
 $admin_themes = 'flat_000'; 
-$adminlogin_themes = 'material_006'; 
+$adminlogin_themes = 'material_001'; 
 
 // Đường dẫn tuyệt đối đến thư mục ảnh của toàn bộ hệ thống
 // Ví dụ: C:/xampp/htdocs/web/image
