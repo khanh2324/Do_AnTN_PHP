@@ -7,10 +7,10 @@
         <?php } else {?>
         <li><a href="/register.php">Đăng Kí</a></li>
         <?php }?>
-        
+
       </ul>
-    <div class="row">                
-     <div id="content" class="col-sm-9">      
+    <div class="row">
+     <div id="content" class="col-sm-9">
      <h1><?php echo $form_title;?></h1>
       <?php if ($_SESSION['ERROR_TEXT']) {?>
       	<div class="alert alert-danger">
@@ -62,9 +62,9 @@
                           </div>
           </div>
         </fieldset>
-       
+
                 <div class="buttons">
-          <div class="pull-right">                        
+          <div class="pull-right">
             <input value="Tiếp Tục" class="btn btn-primary" type="submit">
           </div>
         </div>

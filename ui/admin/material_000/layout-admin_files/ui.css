@@ -5020,6 +5020,7 @@ ul.pagination > .disabled > a:focus {
   background-color: #fff;
   border-top: 1px solid #dfdfdf;
   padding: 15px;
+
 }
 .tab_left > .tab-content {
   border-left: 2px solid #dfdfdf;

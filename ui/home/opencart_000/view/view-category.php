@@ -4,7 +4,7 @@
     <li><a href="<?php echo $category_href; ?>">Loại Sản Phẩm</a></li>
   </ul>
   <div class="row">
-  	
+
   	<!-- START CATEGORIES SIDE BAR MENU -->
   	<column id="column-left" class="col-sm-3 hidden-xs">
 		<div class="list-group">
@@ -27,7 +27,7 @@
 		</div>
 	</column>
 	<!-- END CATEGORIES SIDE BAR MENU -->
-  	
+
     <div id="content" class="col-sm-9">
       <h2><?php echo $category_name; ?></h2>
       <?php if ($category_thumb || $category_description) { ?>
@@ -106,7 +106,7 @@
         </div>
       </div>
       <br />
-      <div class="row">
+      <div class="row yourclass">
         <?php foreach ($productsByCategory as $product) { ?>
         <div class="product-layout product-list col-xs-12">
           <div class="product-thumb">

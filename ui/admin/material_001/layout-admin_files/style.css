@@ -154,7 +154,7 @@ aside.left-panel.collapsed {
   position: absolute;
   bottom: 0px;
 }
-    
+
 aside.left-panel.lg {
   width: 250px;
 }
@@ -162,7 +162,7 @@ aside.left-panel.lg {
 aside.left-panel.lg + .content {
   margin-left: 250px;
 }
-    
+
 /***** 2.1 LOGO *****/
 .logo {
   padding-top: 20px;
@@ -285,7 +285,7 @@ aside:not(.collapsed) .navigation ul li.active ul {
 
 
 /******************** 3.Top Header ****************/
-    
+
 header {
   background-color: #fff;
   padding-top: 4px;
@@ -342,7 +342,7 @@ header {
   -webkit-box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   border: none;
-  max-height: 330px;
+  max-height: 340px;
   margin-top: 4px;
 }
 
@@ -1427,7 +1427,7 @@ table.focus-on tbody tr.focused th, table.focus-on tbody tr.focused td {
 
 
 /************* 14.Mail **********/
-    
+
 .mails .mail-rateing {
   color: #9d9ea5;
   width: 1%;
@@ -2005,14 +2005,14 @@ ul.p-social-link li a {
   margin:0 auto;
 }
 
-#legend { 
-  background: white; 
-  position: absolute; 
-  top: 0; 
-  right: 15px; 
+#legend {
+  background: white;
+  position: absolute;
+  top: 0;
+  right: 15px;
 }
 #legend .line {
-  color: #333; 
+  color: #333;
 }
 
 
@@ -2084,9 +2084,9 @@ aside.left-panel.collapsed span.nav-label {
   }
 }
 @media (max-width: 768px) {
-    
-    
-    
+
+
+
   aside.left-panel.collapsed {
     width: 250px;
     left: 0px;

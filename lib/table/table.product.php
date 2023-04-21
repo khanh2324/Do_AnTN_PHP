@@ -4,33 +4,33 @@
  *
  * Các hàm quản lý sản phẩm.
  * Bên cạnh phân loại sản phẩm trong bảng `category` thì còn có một số cột trong
- * bảng `product` giúp phân loại: 
+ * bảng `product` giúp phân loại:
  * - `featured`: sản phẩm nổi bật
  * - `best_seller`: bán chạy
  * - `date_added`: sản phẩm mới
- * 
- * Sự phân loại này giúp tăng sự phong phú giao diện phía trang chủ, 
+ *
+ * Sự phân loại này giúp tăng sự phong phú giao diện phía trang chủ,
  * lấp đi nhiều khoảng trống vốn dĩ không có ở thiết kế html gốc.
- * 
+ *
  * @see table.category.php để thấy cách viết mã cho quá trình phân trang: được chuẩn hóa
  * cho nhiều bảng khác.
- * 
+ *
  * @version 2021.05.11 14h54
  */
 
 // Thư viện hàm
 include_once 'tool.image.php';
-	
+
 /**
  * @param array $data Mảng chứa dữ liệu của sản phẩm mới
  * @return int Mã sản phẩm
- * 
+ *
  * @abstract Thêm mới sản phẩm. Quá trình này thêm cả dữ liệu vào
  * các bảng liên quan như ảnh sản phẩm (product_image), loại sản phẩm (category)
  */
 function productAdd($data)
 {
-			
+
 	// Dữ liệu sản phẩm cần được tinh chỉnh
 	// trước khi nhúng vào câu lệnh sql
 	$name            = db_escape($data['name']);	// Tên
@@ -38,17 +38,17 @@ function productAdd($data)
 	$tag             = db_escape($data['tag']);     // từ khóa liên quan
 	$model           = db_escape($data['model']);   // mẫu sản phẩm
 	$price           = (float)$data['price'];		// giá bán (vnd)
-	
+
 	$featured        = (int)$data['featured'];		// tính chất nổi bật (có/không)
 	$best_seller     = (int)$data['best_seller'];   // tính chất bán chạy (có/không)
 	$status          = (int)$data['status'];	    // trạng thái cho phép/không cho phép
 	$sort_order      = (int)$data['sort_order'];	// thứ tự sắp xếp
-	
+
 	// Khóa ngoại
 	$manufacturer_id = (int)$data['manufacturer_id']; // mã nhà sản xuất
 
 	// Chèn dữ liệu của bản ghi mới vào bảng sản phẩm
-	$sql = " 
+	$sql = "
 		INSERT INTO `product`
 		SET model = '{$model}',
 			manufacturer_id = '{$manufacturer_id}',
@@ -59,84 +59,84 @@ function productAdd($data)
 			sort_order = '{$sort_order}',
 			date_added = NOW(),
             date_modified = NOW(),
-			name = '{$name}', 
+			name = '{$name}',
 			description = '{$description}',
-			tag = '{$tag}' 
+			tag = '{$tag}'
 	";
 	//echo $sql;die();
-	
+
 	db_q($sql);
-			
+
 	// Lấy lại khóa chính của bản ghi vừa chèn
 	$product_id = (int)db_lastId();
-			
+
 	// Cập nhật ảnh đại diện (nếu có) / Product Image Thumbnail
-	if (isset($data['image'])) 
+	if (isset($data['image']))
 	{
 		$img = db_escape($data['image']);
 		db_q("UPDATE `product` SET `image` = '{$img}' WHERE `product_id` = '{$product_id}'");
 	}
-			
+
 			// Cách mà PHP xử lý một mảng các thẻ input phía giao diện html gửi lên
 			// https://stackoverflow.com/questions/1010941/html-input-arrays
 			// <input name="product_image[0][image]" value="apple" />
 			// <input name="product_image[0][sort_order]" value="1" />
-			
+
             // <input name="product_image[1][image]" value="pear" />
 			// <input name="product_image[1][sort_order]" value="3" />
-			
+
 			// <input name="product_image[2][image]" value="bannana" />
 			// <input name="product_image[2][sort_order]" value="5" />
-			
+
 			// Khi mảng các thẻ <input> đó gửi lên thì PHP sẽ hứng : $_POST['product_image']
 			// và biến $_POST này được truyền như là đối số cho tham số $data của hàm này productAdd($data)
-			
+
 	// Bộ sưu tập ảnh của riêng sản phẩm này (Product Image Collection/Gallery)
-	if (isset($data['product_image'])) 
+	if (isset($data['product_image']))
 	{
-		foreach ($data['product_image'] as $product_image) 
+		foreach ($data['product_image'] as $product_image)
 		{
 			$image = db_escape($product_image['image']);
 			$sort_order = (int)$product_image['sort_order'];
-					
+
 			// Nếu ảnh này đã được liên kết với sản phẩm rồi thì thôi, bỏ qua
 			// và chuyển sang ảnh tiếp theo của sản phẩm.
 			if(in_array($image, productImages($product_id)))
 				continue;
-					
-					
+
+
 			db_q("
-				INSERT INTO `product_image` 
-				SET `product_id` = '{$product_id}', 
-				    `image` = '{$image}', 
+				INSERT INTO `product_image`
+				SET `product_id` = '{$product_id}',
+				    `image` = '{$image}',
 				    `sort_order` = {$sort_order}
 			");
 		}
 	}
-			
+
 	// Loại sản phẩm (Product Category)
 	// Một sản phẩm thuộc về/liên kết với nhiều loại
-	if (isset($data['product_category'])) 
+	if (isset($data['product_category']))
 	{
-		foreach ($data['product_category'] as $category_id) 
+		foreach ($data['product_category'] as $category_id)
 		{
 			db_q("
-				INSERT INTO `product_to_category` 
-				SET `product_id` = '{$product_id}', 
+				INSERT INTO `product_to_category`
+				SET `product_id` = '{$product_id}',
 				`category_id` = '{$category_id}'"
 			);
 		}
 	}
-			
+
 	return $product_id;
 
 } // kết thúc hàm productAdd($data)
-	
+
 /**
  * @param int $product_id Mã sản phẩm
  * @param array $data Mảng chứa dữ liệu của sản phẩm cần sửa
  * @return int Mã sản phẩm bị chỉnh sửa
- * 
+ *
  * @abstract Hàm sửa thông tin sản phẩm.
  */
 function productEdit($product_id, $data)
@@ -148,17 +148,17 @@ function productEdit($product_id, $data)
 	$tag             = db_escape($data['tag']);     // từ khóa liên quan
 	$model           = db_escape($data['model']);   // mẫu sản phẩm
 	$price           = (float)$data['price'];		// giá bán (vnd)
-	
+
 	$featured        = (int)$data['featured'];		// tính chất nổi bật (có/không)
 	$best_seller     = (int)$data['best_seller'];   // tính chất bán chạy (có/không)
 	$status          = (int)$data['status'];	    // trạng thái cho phép/không cho phép
 	$sort_order      = (int)$data['sort_order'];	// thứ tự sắp xếp
-	
+
 	// Khóa ngoại
 	$manufacturer_id = (int)$data['manufacturer_id']; // mã nhà sản xuất
-	
+
 	// Cập nhật dữ liệu của bản ghi cũ
-	$sql = " 
+	$sql = "
 		UPDATE product
 		SET model = '{$model}',
 			manufacturer_id = '{$manufacturer_id}',
@@ -168,104 +168,104 @@ function productEdit($product_id, $data)
 			featured = '{$featured}',
 			sort_order = '{$sort_order}',
 			date_modified = NOW(),
-			name = '{$name}', 
+			name = '{$name}',
 			description = '{$description}',
-			tag = '{$tag}' 
+			tag = '{$tag}'
 		WHERE product_id = '{$product_id}'
     ";
-			
+
 	db_q($sql);
-			
+
 	// Cập nhật ảnh đại diện (nếu có) / Product Image Thumbnail
-	if (isset($data['image'])) 
+	if (isset($data['image']))
 	{
 		$image = db_escape($data['image']);
-				
+
 		$sql = "UPDATE `product` SET `image` = '{$image}' WHERE `product_id` = '{$product_id}'";
 		db_q($sql);
 	}
-			
+
 	// Xóa đi các ảnh cũ của sản phẩm trong gallery
 	db_q("DELETE FROM `product_image` WHERE `product_id` = '{$product_id}'");
 
 	// Bộ sưu tập ảnh sản phẩm này được cập nhật lại / Product Image Collection
-	if (isset($data['product_image'])) 
+	if (isset($data['product_image']))
 	{
-		foreach ($data['product_image'] as $product_image) 
+		foreach ($data['product_image'] as $product_image)
 		{
 			$image = db_escape($product_image['image']);
 			$sort_order = (int)$product_image['sort_order']; // (int) để tránh lỗi Incorrect integer value: '' for column 'sort_order' at row 1
-					
+
 			// Nếu ảnh này đã được liên kết với sản phẩm rồi thì thôi, bỏ qua
 			// và chuyển sang ảnh tiếp theo của sản phẩm.
 			if(in_array($image, productImages($product_id)))
 				continue;
-					
-					
+
+
 			db_q("
-				INSERT INTO `product_image` 
+				INSERT INTO `product_image`
 				SET `product_id` = '{$product_id}',
-				    `image` = '{$image}', 
+				    `image` = '{$image}',
 				    `sort_order` = '{$sort_order}'
 			");
 		}
 	}
-			
+
 	// Xóa đi mối liên quan giữa sản phẩm với các loại cũ
 	db_q("DELETE FROM `product_to_category` WHERE `product_id` = '{$product_id}'");
 
 	// Những loại sản phẩm liên quan cần được cập nhật lại / Product To Categories
-	if (isset($data['product_category'])) 
+	if (isset($data['product_category']))
 	{
-		foreach ($data['product_category'] as $category_id) 
+		foreach ($data['product_category'] as $category_id)
 		{
 			db_q("INSERT INTO `product_to_category` SET `product_id` = '{$product_id}', `category_id` = '{$category_id}'");
 		}
 	}
-			
+
 	return $product_id;
 }
-	
+
 /**
  * @param int $product_id Mã sản phẩm
  * @return int Mã sản phẩm vừa được sao chép mới
- * 
+ *
  * @abstract Sao chép thông tin sản phẩm sang một bản ghi mới.
  * Tiện cho việc thêm mới một sản phẩm có nhiều thông tin trùng với một sản phẩm đã có sẵn.
  */
 function productCopy($product_id)
 {
 	// Lấy ra dữ liệu của bản ghi gốc
-	$sql = " 
-		SELECT DISTINCT * 
+	$sql = "
+		SELECT DISTINCT *
 		FROM `product`
 		WHERE `product_id` = '{$product_id}'
 	";
 	$rs = db_row($sql);
-		
-	$copied_id = NULL;	
-	if ( is_array($rs) && !empty($rs) ) 
+
+	$copied_id = NULL;
+	if ( is_array($rs) && !empty($rs) )
 	{
 		$data = array();
 
 		$data = $rs;
-				
+
 		// Tinh chỉnh một vài điểm
 		$data['status'] = '0'; // chưa cho phép sản phẩm sao chép hiện lên phía trang chủ
-	
+
 		$data = array_merge($data, array('product_image' => productGetImages($product_id)));
 		$data = array_merge($data, array('product_category' => productCategories($product_id)));
-				
+
 		// Tiến hành copy (thêm mới bản ghi với nội dung giống bản ghi gốc)
 		$copied_id = productAdd($data);
 	}
 
 	return $copied_id;
 }	// end function
-	
+
 /**
  * @return int Mã sản phẩm bị xóa
- * 
+ *
  * @abstract Xóa sản phẩm dựa trên mã
  */
 function productDelete($product_id)
@@ -273,26 +273,26 @@ function productDelete($product_id)
 	// Đếm xem có bao nhiêu đơn hàng đặt sản phẩm này
 	$count = (int)db_one("SELECT COUNT(product_id) FROM `order_details` WHERE `product_id`='{$product_id}'");
 	$_SESSION['ERROR_TEXT'] = null;
-	
+
 	// Nếu như có đơn hàng đặt sản phẩm này thì không thể xóa nó đi khỏi
 	// bảng `product` được !!!
-	if ($count > 0) 
+	if ($count > 0)
 	{
 		$_SESSION['ERROR_TEXT'] = "Không thể xóa sản phẩm id={$product_id} vì tồn tại trong đơn hàng!";
 		return false;
 	}
-	
+
 	// Xóa dữ liệu ở các bảng liên quan đến sản phẩm
 	db_q("DELETE FROM `product_image` WHERE `product_id` = '{$product_id}'");
 	db_q("DELETE FROM `product_to_category` WHERE `product_id` = '{$product_id}'");
-			
+
 	// sau đó xóa bản ghi sản phẩm cần xóa.
 	db_q("DELETE FROM `product` WHERE `product_id` = '{$product_id}'");
-	
+
 	return $product_id;
-	
+
 } // kết thúc hàm productDelete()
-	
+
 /**
  * @deprecated Không khuyến khích sử dụng nữa. Chưa loại bỏ hoàn toàn. Chưa cấm sử dụng.
  * @param int $product_id
@@ -309,23 +309,23 @@ function productGetById($product_id)
  */
 function productById($product_id)
 {
-	$sql = " 
+	$sql = "
 		SELECT DISTINCT *
-		FROM `product` AS p 
-		WHERE p.product_id = {$product_id}  
+		FROM `product` AS p
+		WHERE p.product_id = {$product_id}
 	";
-		
+
 	$rs = db_row($sql);
-		
-	if ( is_array($rs) && !empty($rs) ) 
+
+	if ( is_array($rs) && !empty($rs) )
 	{
 		return $rs;
 	}
 
 	return NULL;
-	
+
 } // kết thúc hàm productById()
-	
+
 /**
  * @deprecated Không khuyến khích sử dụng nữa. Chưa loại bỏ hoàn toàn. Chưa cấm sử dụng.
  * @param int $product_id
@@ -338,48 +338,48 @@ function productGetCategories($product_id)
 /**
  * @param int $product_id Mã sản phẩm
  * @return array Một mảng đánh chỉ số, mỗi phần tử là một mã loại
- * 
- * @abstract Lấy ra các loại liên quan đến 1 sản phẩm 
+ *
+ * @abstract Lấy ra các loại liên quan đến 1 sản phẩm
  */
 function productCategories($product_id)
 {
 	$product_category_data = array();
-		
-	$sql = " 
+
+	$sql = "
 		SELECT *
 		FROM `product_to_category`
 		WHERE product_id = {$product_id}
 	";
 
 	$rs = db_q($sql);
-	if ( is_array($rs) && !empty($rs) ) 
+	if ( is_array($rs) && !empty($rs) )
 	{
-		foreach ($rs as $result) 
+		foreach ($rs as $result)
 		{
 			$product_category_data[] = $result['category_id'];
 		}
-		
+
 		return $product_category_data;
 	}
 
 	return NULL;
-	
+
 } // kết thúc hàm productCategories()
-	
-	
+
+
 /**
  * Lấy ra các ảnh của một sản phẩm
  * @returns an indexed array of associative arrays
  */
 function productGetImages($product_id)
 {
-	$sql = " 
+	$sql = "
 		SELECT *
 		FROM `product_image`
 		WHERE product_id = {$product_id}
 		ORDER BY sort_order ASC
 	";
-		
+
 	$rs = db_q($sql);
 	if ( is_array($rs) && !empty($rs) )
 	{
@@ -388,7 +388,7 @@ function productGetImages($product_id)
 
 	return false;
 } // kết thúc hàm productGetImages()
-	
+
 
 //function productGetRelatedProducts($product_id)
 
@@ -398,44 +398,44 @@ function productGetImages($product_id)
  * @abstract Lấy ra dữ liệu chi tiết(dạng thô) của một sản phẩm (có tính cả các thông tin nằm trong các bảng khác).
  *           Hàm này chạy nhanh hơn hàm productInfo() do nó không phải xử lý ảnh nhiều.
  *           ĐỪNG bắt hàm này phải xử lý ảnh, nếu không nó sẽ gây chậm giống như hàm productInfo().
- *           Xử lý ảnh (thumb, popup, images) là việc của chương trình khách. 
+ *           Xử lý ảnh (thumb, popup, images) là việc của chương trình khách.
  */
 
 function productDetails($product_id)
 {
 // câu truy vấn không tường minh, tắt (implicit sql), không liệt kê rõ các cột
-// 	$sql = " 
-// 		SELECT DISTINCT *, 
-// 				p.name AS name, 
-// 				p.image, 
-// 				m.name AS manufacturer, 
-// 				p.sort_order 
+// 	$sql = "
+// 		SELECT DISTINCT *,
+// 				p.name AS name,
+// 				p.image,
+// 				m.name AS manufacturer,
+// 				p.sort_order
 // 		FROM product p
-// 		LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id) 
+// 		LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
 // 		WHERE p.product_id = '$product_id' AND p.status = '1'
 // 	";
-	
+
     // câu truy vấn tường minh, đầy đủ, rõ ràng, không viết tắt
 	$sql = "
-		SELECT 
+		SELECT
             p.product_id, p.model, p.name, p.image, p.manufacturer_id, p.price, p.sort_order, p.status, p.date_added, p.description, p.best_seller, p.featured, p.tag,
 			m.name AS manufacturer,
 		FROM `product` AS p
 		LEFT JOIN `manufacturer` AS m ON (p.manufacturer_id = m.manufacturer_id)
 		WHERE p.product_id = '{$product_id}' AND p.status = '1'
 	";
-	
+
 	$rs = db_row($sql);
 
 	return $rs;
-	
+
 }// kết thúc hàm productDetails()
 
 /**
  * @param int $product_id Mã sản phẩm
  * @return array Mảng kết hợp chứa thông tin sản phẩm lấy ra từ các bảng `product`, `manufacturer`
  * @abstract Lấy ra thông tin một sản phẩm dựa trên mã. Chú ý là chỉ nên gọi hàm này ở trang product-info.php
- *           Đừng gọi hàm này khi duyệt một mảng các sản phẩm vì nó sẽ gây chậm hệ thống, do bản 
+ *           Đừng gọi hàm này khi duyệt một mảng các sản phẩm vì nó sẽ gây chậm hệ thống, do bản
  *           thân hàm này có rất nhiều đoạn mã xử lý dữ liệu thô bên trong (xử lý ảnh)
  */
 function productInfo($product_id)
@@ -443,7 +443,7 @@ function productInfo($product_id)
 	// Câu truy vấn
 // 	$sql = "
 // 		SELECT DISTINCT *,
-// 	  		p.name AS name, 
+// 	  		p.name AS name,
 // 	  		p.image,
 // 	  		m.name AS manufacturer,
 // 	  		p.sort_order
@@ -451,7 +451,7 @@ function productInfo($product_id)
 // 	 	LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
 // 	 	WHERE p.product_id = '$product_id' AND p.status = '1'
 // 	";
-	
+
 	// câu truy vấn tường minh, đầy đủ, rõ ràng, không viết tắt
 	$sql = "
 		SELECT
@@ -461,23 +461,23 @@ function productInfo($product_id)
 		LEFT JOIN `manufacturer` AS m ON (p.manufacturer_id = m.manufacturer_id)
 		WHERE p.product_id = '{$product_id}' AND p.status = '1'
 	";
-	
+
 	// Thực thi truy vấn
 	$rs = db_row($sql);
-	
+
 	// Nếu kết quả truy vấn là mảng không rỗng
 	if ( is_array($rs) && !empty($rs) )
 	{
 		// Ảnh sản phẩm
-		if (is_file(DIR_IMAGE . $rs['image'])) // Nếu ảnh sản phẩm này có tồn tại trên máy chủ web  
+		if (is_file(DIR_IMAGE . $rs['image'])) // Nếu ảnh sản phẩm này có tồn tại trên máy chủ web
 		{
 			$image = img_resize($rs['image'], $setting['width'], $setting['height']);
-		} 
-		else	// Nếu ảnh sản phẩm này không tồn tại trên ổ cứng web server thì lấy ảnh chờ để thay thế 
+		}
+		else	// Nếu ảnh sản phẩm này không tồn tại trên ổ cứng web server thì lấy ảnh chờ để thay thế
 		{
 			$image = img_resize('placeholder.png', $setting['width'], $setting['height']);
 		}
-		
+
 		// Hình đại diện sản phẩm trên gallery ảnh sản phẩm (xem /product-info.php)
 		if (is_file(DIR_IMAGE . $rs['image']))
 		{
@@ -487,7 +487,7 @@ function productInfo($product_id)
 		{
 			$thumb = img_resize('placeholder.png', settings('config_image_thumb_width'), settings('config_image_thumb_height'));
 		}
-		
+
 		// Hình ảnh phóng to (zoom-in) sản phẩm trên gallery ảnh sản phẩm (xem /product-info.php)
 		if (is_file(DIR_IMAGE . $rs['image']))
 		{
@@ -497,12 +497,12 @@ function productInfo($product_id)
 		{
 			$popup = img_resize('placeholder.png', settings('config_image_popup_width'), settings('config_image_popup_height'));
 		}
-		
+
 		// Các ảnh sản phẩm
 		$product_images = array();
-		
+
 		$results = productGetImages($product_id);
-		
+
 		foreach ($results as $result)
 		{
 			if (is_file(DIR_IMAGE . $result['image']))
@@ -519,10 +519,10 @@ function productInfo($product_id)
 						'thumb' => img_resize('placeholder.png', settings('config_image_additional_width'), settings('config_image_additional_height'))
 				);
 			}
-		
-		
+
+
 		}
-		
+
 		// Thông Tin Sản Phẩm = Dữ Liệu Gốc của Sản Phẩm nhưng được định dạng lại
 		// để trở nên dễ hiểu, dễ đọc với người dùng cuối phía giao diện.
 		// Ví dụ: Giá sản phẩm được thêm dấu phẩy ngăn cách phần nghìn và đơn vị ' ₫' (việt nam đồng)
@@ -542,7 +542,7 @@ function productInfo($product_id)
 			'manufacturer'      => $rs['manufacturer'],
 			'manufacturer_id'   => $rs['manufacturer_id'],
 			'manufacturer_href' => '/manufacturer-info.php?manufacturer_id=' . $rs['manufacturer_id'],
-			'price'             => price_text_vnd($rs['price']), 
+			'price'             => price_text_vnd($rs['price']),
 			'rating'            => settings('config_review_status') ? $rs['rating'] : false,
 			'sort_order'        => $rs['sort_order'],
 			'status'            => $rs['status'],
@@ -551,7 +551,7 @@ function productInfo($product_id)
 			'date_modified'     => $rs['date_modified']
 		);
 	}
-		
+
 	return $rs;
 }
 
@@ -587,24 +587,24 @@ function productGetTotal($data=array())
 
 	// Nếu yêu cầu tìm theo trạng thái của sản phẩm (cho phép/không cho phép hiện trên giao diện)
 	// thì bổ sung yêu cầu này vào câu sql
-	if (isset($data['filter_status']) && !is_null($data['filter_status'])) 
+	if (isset($data['filter_status']) && !is_null($data['filter_status']))
 	{
 		$sql .= " AND `status` = '" . (int)$data['filter_status'] . "'";
 	}
-	
+
 	// Nếu yêu cầu tìm các sản phẩm nổi bật
 	if (isset($data['filter_featured']) && !is_null($data['filter_featured']))
 	{
 		$sql .= " AND `featured` = '" . (int)$data['filter_featured'] . "'";
 	}
-	
+
 	// Nếu yêu cầu tìm các sản phẩm bán chạy
 	if (isset($data['filter_best_seller']) && !is_null($data['filter_best_seller']))
 	{
 	    $sql .= " AND `best_seller` = '" . (int)$data['filter_best_seller'] . "'";
 	}
-	
-	
+
+
 	// Khi đếm tổng số sản phẩm thì không cần quan tâm đến thứ tự sắp xếp
 
 	$rs = db_one($sql);
@@ -614,7 +614,7 @@ function productGetTotal($data=array())
 	}
 
 	return false;
-	
+
 } // kết thúc hàm  productGetTotal()
 
 /**
@@ -632,7 +632,7 @@ function productGetTotal($data=array())
  * @return array an indexed array of associative arrays
  * @todo Học tập cách lọc theo khoảng giá:
  * http://localhost/manufacturer-info.php?manufacturer_id=8&sort=p.price&order=RANGE&price_min=3000000&price_max=20000000
- * 
+ *
  * @desc Đừng bắt hàm này đọc cấu hình mặc định của hệ thống từ database.
  *       Ví dụ: $limit = 20, chứ đừng viết là $limit = $settings['config_admin_limit'].
  *       Nhường việc đọc dữ liệu db cho chương trình khách, cụ thể ở đây là tầng logic.
@@ -656,17 +656,17 @@ function productGetAll($data = array())
 
 	// Nếu yêu cầu tìm theo trạng thái của sản phẩm (cho phép/không cho phép hiện trên giao diện)
 	// thì bổ sung yêu cầu này vào câu sql
-	if (isset($data['filter_status']) && !is_null($data['filter_status'])) 
+	if (isset($data['filter_status']) && !is_null($data['filter_status']))
 	{
 		$sql .= " AND `status` = '" . (int)$data['filter_status'] . "'";
 	}
-	
+
 	// Nếu yêu cầu tìm các sản phẩm nổi bật
 	if (isset($data['filter_featured']) && !is_null($data['filter_featured']))
 	{
 		$sql .= " AND `featured` = '" . (int)$data['filter_featured'] . "'";
 	}
-	
+
 	// Nếu yêu cầu tìm các sản phẩm bán chạy
 	if (isset($data['filter_best_seller']) && !is_null($data['filter_best_seller']))
 	{
@@ -687,38 +687,38 @@ function productGetAll($data = array())
 
 	// Nếu phía giao diện yêu cầu sắp xếp theo một trong các cột được phép
 	// liệt kê ở trên ...
-	if (isset($data['sort']) && in_array($data['sort'], $sort_data)) 
+	if (isset($data['sort']) && in_array($data['sort'], $sort_data))
 	{
 		$sql .= " ORDER BY " . $data['sort'];
-	} 
+	}
 	else // ... còn không nói gì thì sắp xếp theo cột tên sản phẩm `name`
 	{
 		$sql .= " ORDER BY `name`";
 	}
 
 	// Nếu phía giao diện yêu cầu sắp xếp giảm
-	if (isset($data['order']) && ($data['order'] == 'DESC')) 
+	if (isset($data['order']) && ($data['order'] == 'DESC'))
 	{
 		$sql .= " DESC";
-	} 
-	else // còn không nói gì thì sắp xếp tăng 
+	}
+	else // còn không nói gì thì sắp xếp tăng
 	{
 		$sql .= " ASC";
 	}
 
 	// Nhúng thông tin phân trang (nếu có) vào trong $sql
-	if (isset($data['start']) || isset($data['limit'])) 
+	if (isset($data['start']) || isset($data['limit']))
 	{
 		// tinh chỉnh chỉ số của bản ghi bắt đầu
-		if ((int)$data['start'] < 0) 
+		if ((int)$data['start'] < 0)
 		{
 			$data['start'] = 0;
 		}
 
 		// tinh chỉnh chỉ số của bản ghi kết thúc
-		// nếu phía khách không chỉ rõ giới hạn phân trang thì ấn định / chỉ định 1 giá trị cụ thể 
+		// nếu phía khách không chỉ rõ giới hạn phân trang thì ấn định / chỉ định 1 giá trị cụ thể
 		// đừng lấy thông tin này ra từ database, vì đó là việc của phía khách: settings('config_limit_admin');
-		if ((int)$data['limit'] < 1) 
+		if ((int)$data['limit'] < 1)
 		{
 			$data['limit'] = 5; //settings('config_limit_admin');
 		}
@@ -739,104 +739,104 @@ function productGetAll($data = array())
 /**
  * @abstract Đếm tổng số sản phẩm dựa theo tiêu chí tìm kiếm.
  * Phục vụ tìm kiếm sản phẩm trên trang chủ home.
- * 
+ *
  * @todo Đồng nhất hàm này với hàm productGetAllForSearch()
  * @todo Khi tìm theo description thì total hiển thị không đúng lắm.
  */
 function productGetTotalForSearch($data = array())
 {
-	$sql = " 
+	$sql = "
 		SELECT COUNT(DISTINCT p.product_id) AS total
 		FROM `product` p
 		WHERE p.status = '1'
 	";
-			
-			
-	if (!empty($data['filter_name']) || !empty($data['filter_tag'])) 
-// 	if ( !empty($data['filter_name']) ) // cách làm sai !!! 
+
+
+	if (!empty($data['filter_name']) || !empty($data['filter_tag']))
+// 	if ( !empty($data['filter_name']) ) // cách làm sai !!!
 	{
 		$sql .= " AND (";
-	
-		if (!empty($data['filter_name'])) 
+
+		if (!empty($data['filter_name']))
 		{
 			$implode = array();
-					
+
 			// Bẻ nhỏ các từ khóa trong chuỗi kí tự tìm kiếm
 			$words = explode(' ', trim(preg_replace('/\s+/', ' ', $data['filter_name'])));
-					
+
 			// so sánh mỗi từ đó với tên sản phẩm
-			foreach ($words as $word) 
+			foreach ($words as $word)
 			{
 				$implode[] = "p.name LIKE '%" . db_escape($word) . "%'";
 			}
-	
-			if ($implode) 
+
+			if ($implode)
 			{
 				$sql .= " " . implode(" AND ", $implode) . "";
 			}
-					
+
 			// Nếu như tìm kiếm cả trong phần mô tả sản phẩm
 // 			if (!empty($data['filter_description'])) {
 // 				$sql .= " OR p.description LIKE '%" . db_escape($data['filter_name']) . "%'";
 // 			}
-					
+
 			$sql .= " OR ";
-					
+
 			// Nâng cấp tìm trong cả mô tả sản phẩm: bẻ nhỏ từ khóa tìm kiếm
 			$implode_desc = array();
-			foreach ($words as $word) 
+			foreach ($words as $word)
 			{
 				$implode[] = "p.description LIKE '%" . db_escape($word) . "%'";
 			}
-					
-			if ($implode_desc) 
+
+			if ($implode_desc)
 			{
 				$sql .= " " . implode(" AND ", $implode_desc) . "";
 			}
-					
+
 		}
-	
-		if (!empty($data['filter_name']) && !empty($data['filter_tag'])) 
+
+		if (!empty($data['filter_name']) && !empty($data['filter_tag']))
 		{
 			$sql .= " OR ";
 		}
-	
-		if (!empty($data['filter_tag'])) 
+
+		if (!empty($data['filter_tag']))
 		{
 			$sql .= "p.tag LIKE '%" . db_escape(utf8_strtolower($data['filter_tag'])) . "%'";
 		}
-	
-		if (!empty($data['filter_name'])) 
+
+		if (!empty($data['filter_name']))
 		{
 			$sql .= " OR LCASE(p.model) = '" . db_escape(utf8_strtolower($data['filter_name'])) . "'";
 		}
-	
+
 		$sql .= ")";
 	}
-			
+
 	$rs = db_one($sql);
-	
+
 	return $rs;
-}	
+}
 
 /**
  * @abstract Lấy ra tất cả các sản phẩm phù hợp với tiêu chí tìm kiếm.
  * Phải tìm kiếm sao cho ngay cả khi người dùng gõ nhiều từ khóa vào Search Box thì vẫn ra.
  * Thuật toán: bẻ vụn từ khóa tìm kiếm ra thành nhiều từ rồi lần lượt so sánh nó với `name`, `description`, `model`
  * Tìm theo tên, mô tả, tag (từ khóa)
- * 
+ *
  * @synchronized Đồng nhất hàm này với hàm productGetTotalForSearch()
 ví dụ: search: mobile new
-SELECT * 
-FROM `product` p 
-WHERE p.status = '1' AND ( 
-      p.name LIKE '%mobile%' AND 
-      p.name LIKE '%new%' OR 
-      p.description LIKE '%mobile%' AND 
-      p.description LIKE '%new%' OR 
-      p.tag LIKE '%mobile new%' OR 
-      LCASE(p.model) = 'mobile new') 
-ORDER BY p.sort_order ASC, LCASE(p.name) 
+SELECT *
+FROM `product` p
+WHERE p.status = '1' AND (
+      p.name LIKE '%mobile%' AND
+      p.name LIKE '%new%' OR
+      p.description LIKE '%mobile%' AND
+      p.description LIKE '%new%' OR
+      p.tag LIKE '%mobile new%' OR
+      LCASE(p.model) = 'mobile new')
+ORDER BY p.sort_order ASC, LCASE(p.name)
 ASC LIMIT 0,15﻿
 
 Phục vụ tìm kiếm sản phẩm trên trang chủ home.
@@ -844,40 +844,40 @@ Phục vụ tìm kiếm sản phẩm trên trang chủ home.
  */
 function productGetAllForSearch($data = array())
 {
-	$sql = " 
+	$sql = "
 		SELECT *
 		FROM `product` p
-		WHERE p.status = '1' 
+		WHERE p.status = '1'
 	";
-			
-			
-	if (!empty($data['filter_name']) || !empty($data['filter_tag'])) 
+
+
+	if (!empty($data['filter_name']) || !empty($data['filter_tag']))
 	{
 		$sql .= " AND (";
-	
-		if (!empty($data['filter_name'])) 
+
+		if (!empty($data['filter_name']))
 		{
 			$implode = array();
-					
+
 			// Bẻ nhỏ các từ khóa trong chuỗi kí tự tìm kiếm
 			$words = explode(' ', trim(preg_replace('/\s+/', ' ', $data['filter_name'])));
-					
+
 			// so sánh mỗi từ đó với tên sản phẩm
-			foreach ($words as $word) 
+			foreach ($words as $word)
 			{
 				$implode[] = "p.name LIKE '%" . db_escape($word) . "%'";
 			}
-	
-			if ($implode) 
+
+			if ($implode)
 			{
 				$sql .= " " . implode(" AND ", $implode) . "";
 			}
-					
+
 			// Nếu như tìm kiếm cả trong phần mô tả sản phẩm
-			if (!empty($data['filter_description'])) 
+			if (!empty($data['filter_description']))
 			{
 				// $sql .= " OR p.description LIKE '%" . db_escape($data['filter_name']) . "%'"; // cách làm cũ
-						
+
 				$sql .= " OR ";
 						// Nâng cấp tìm trong cả mô tả sản phẩm: bẻ nhỏ từ khóa tìm kiếm
 				$implode_desc = array();
@@ -885,7 +885,7 @@ function productGetAllForSearch($data = array())
 				{
 					$implode_desc[] = "p.description LIKE '%" . db_escape($word) . "%'";
 				}
-						
+
 				if ($implode_desc)
 				{
 						$sql .= " " . implode(" AND ", $implode_desc) . "";
@@ -893,13 +893,13 @@ function productGetAllForSearch($data = array())
 			}
 
 		}
-	
+
 		// Nếu tìm kiếm theo cả tên sản phẩm và tag sản phẩm thì bổ sung từ khóa OR
 		if (!empty($data['filter_name']) && !empty($data['filter_tag']))
 		{
 			$sql .= " OR ";
 		}
-		
+
 		// Nếu tìm kiếm theo tag sản phẩm:
 		// thông thường, ở phía chương trình khách mà không nhận được tag thì người ta gán
 		// search_key_word vào tag hay: filter_tag = filter_name = search
@@ -907,15 +907,15 @@ function productGetAllForSearch($data = array())
 		{
 			$sql .= "p.tag LIKE '%" . db_escape(utf8_strtolower($data['filter_tag'])) . "%'";
 		}
-		
+
 		if (!empty($data['filter_name']))
 		{
 			$sql .= " OR LCASE(p.model) = '" . db_escape(utf8_strtolower($data['filter_name'])) . "'";
 		}
-	
+
 		$sql .= ")";
 	}
-	
+
 	// Các cột được phép sắp xếp
 	$sort_data = array(
 		'p.name',
@@ -926,7 +926,7 @@ function productGetAllForSearch($data = array())
 	);
 
 	// Nếu chỉ định rõ cột sắp xếp và cột này nằm trong danh sách cho phép
-	if (isset($data['sort']) && in_array($data['sort'], $sort_data)) 
+	if (isset($data['sort']) && in_array($data['sort'], $sort_data))
 	{
 			if ($data['sort'] == 'p.name' || $data['sort'] == 'p.model') {
 				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
@@ -935,43 +935,43 @@ function productGetAllForSearch($data = array())
 			} else {
 				$sql .= " ORDER BY " . $data['sort'];
 			}
-	} 
+	}
 	else // còn nếu không nói gì thì sắp xếp theo cột `sort_order`
 	{
 		$sql .= " ORDER BY p.sort_order";
 	}
 
 	// Nếu chỉ định chiều sắp xếp là tăng
-	if (isset($data['order']) && ($data['order'] == 'DESC')) 
+	if (isset($data['order']) && ($data['order'] == 'DESC'))
 	{
 			$sql .= " DESC, LCASE(p.name) DESC";
-	} 
+	}
 	else // còn không nói gì thì sắp xếp giảm
 	{
 			$sql .= " ASC, LCASE(p.name) ASC";
 	}
-	
+
 	// Phân trang
-	if (isset($data['start']) || isset($data['limit'])) 
+	if (isset($data['start']) || isset($data['limit']))
 	{
-		if ($data['start'] < 0) 
+		if ($data['start'] < 0)
 		{
 			$data['start'] = 0;
 		}
 
-		if ($data['limit'] < 1) 
+		if ($data['limit'] < 1)
 		{
 			$data['limit'] = settings('config_limit_admin');
 		}
 
 		$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 	}
-	
+
 	//		echo $sql;
 	$rs = db_q($sql);
-	
+
 	return $rs;
-}	
+}
 
 /**
  * @param array $data
@@ -979,26 +979,26 @@ function productGetAllForSearch($data = array())
  */
 function productGetTotalForManufacturer($data = array())
 {
-	$sql = " 
+	$sql = "
 		SELECT COUNT(DISTINCT p.product_id) AS total
 		FROM `product` p
-		WHERE p.status = '1' 
-		
+		WHERE p.status = '1'
+
 	";
-			
-	if (!empty($data['filter_manufacturer_id'])) 
+
+	if (!empty($data['filter_manufacturer_id']))
 	{
 		$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 	}
-	
+
 	// Nếu phía giao diện yêu cầu lọc sản phẩm theo khoảng giá
 	if (!empty($data['price_min']) && !empty($data['price_max']))
 	{
 		$sql .= " AND p.price BETWEEN " . (int)$data['price_min'] . " AND ".(int)$data['price_max'];
 	}
-	
+
 	$rs = db_one($sql);
-	
+
 	return $rs;
 }
 
@@ -1009,23 +1009,23 @@ function productGetTotalForManufacturer($data = array())
  */
 function productGetAllForManufacturer($data = array())
 {
-	$sql = " 
+	$sql = "
 		SELECT *
 		FROM `product` p
-		WHERE p.status = '1' 
+		WHERE p.status = '1'
 	";
-	
-	if (!empty($data['filter_manufacturer_id'])) 
+
+	if (!empty($data['filter_manufacturer_id']))
 	{
 		$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 	}
 
     // Nếu phía giao diện yêu cầu lọc sản phẩm theo khoảng giá
-    if (!empty($data['price_min']) && !empty($data['price_max'])) 
+    if (!empty($data['price_min']) && !empty($data['price_max']))
 	{
 		$sql .= " AND p.price BETWEEN " . (int)$data['price_min'] . " AND ".(int)$data['price_max'];
 	}
-			
+
 	// Các cột được phép sắp xếp
 	$sort_data = array(
 			'p.name',
@@ -1036,74 +1036,74 @@ function productGetAllForManufacturer($data = array())
 	);
 
 	// Nếu chỉ định cột sắp xếp
-	if (isset($data['sort']) && in_array($data['sort'], $sort_data)) 
+	if (isset($data['sort']) && in_array($data['sort'], $sort_data))
 	{
-		if ($data['sort'] == 'p.name' || $data['sort'] == 'p.model') 
+		if ($data['sort'] == 'p.name' || $data['sort'] == 'p.model')
 		{
 				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
-		} 
-		elseif ($data['sort'] == 'p.price') 
+		}
+		elseif ($data['sort'] == 'p.price')
 		{
 				$sql .= " ORDER BY " . $data['sort'];
-		} 
+		}
 		else {
 				$sql .= " ORDER BY " . $data['sort'];
 		}
-	} 
+	}
 	else // còn không nói gì thì sắp xếp theo cột `sort_order`
 	{
 			$sql .= " ORDER BY p.sort_order";
 	}
 
 	// Nếu chỉ định chiều sắp xếp giảm dần
-	if (isset($data['order']) && ($data['order'] == 'DESC')) 
+	if (isset($data['order']) && ($data['order'] == 'DESC'))
 	{
 			$sql .= " DESC, LCASE(p.name) DESC";
-	} 
-	else // còn không nói gì thì sắp xếp tăng dần 
+	}
+	else // còn không nói gì thì sắp xếp tăng dần
 	{
 			$sql .= " ASC, LCASE(p.name) ASC";
 	}
-	
+
 	// Phân trang
-	if (isset($data['start']) || isset($data['limit'])) 
+	if (isset($data['start']) || isset($data['limit']))
 	{
-		if ($data['start'] < 0) 
+		if ($data['start'] < 0)
 		{
 			$data['start'] = 0;
 		}
 
-		if ($data['limit'] < 1) 
+		if ($data['limit'] < 1)
 		{
 			$data['limit'] = 20;
 		}
 
 		$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 	}
-			
+
 	$rs = db_q($sql);
-	
+
 	return $rs;
-}	
+}
 
 /**
  @description Tính tổng số sản phẩm thuộc về loại sản phẩm này
- 
+
  @param $category_id int Id loại sản phẩm
  @return int tổng số sản phẩm
  */
 function productGetTotalForCategory($category_id)
 {
-	$sql = " 
+	$sql = "
 		SELECT COUNT(DISTINCT p.product_id) AS total
 		FROM `product_to_category` AS p2c
 		LEFT JOIN `product` AS p ON (p2c.product_id = p.product_id)
-		WHERE p.status = '1' 
+		WHERE p.status = '1'
 			AND p2c.category_id = '{$category_id}'
     ";
-			
+
 	return (int)db_one($sql);
-	
+
 }
 
 /**
@@ -1118,14 +1118,14 @@ function productGetTotalForCategory($category_id)
 				'limit'              => $limit
 			);
  */
-function productGetAllForCategory($data = array()) 
+function productGetAllForCategory($data = array())
 {
 	$category_id = (int)$data['filter_category_id'];
-	$sql = " 
+	$sql = "
 		SELECT *
 		FROM `product_to_category` AS p2c
 		LEFT JOIN `product` AS p ON (p2c.product_id = p.product_id)
-		WHERE p.status = '1' 
+		WHERE p.status = '1'
 			AND p2c.category_id = '{$category_id}'
 		GROUP BY p.product_id
 	";
@@ -1137,9 +1137,9 @@ function productGetAllForCategory($data = array())
 		'p.sort_order',
 		'p.date_added'
 	);
-	
+
 	// Sắp xếp theo cột nào ?
-	if (isset($data['sort']) && in_array($data['sort'], $sort_data)) 
+	if (isset($data['sort']) && in_array($data['sort'], $sort_data))
 	{
 			if ($data['sort'] == 'p.name' || $data['sort'] == 'p.model') {
 				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
@@ -1153,46 +1153,46 @@ function productGetAllForCategory($data = array())
 	}
 
 	// Sắp xếp tăng hay giảm ?
-	if (isset($data['order']) && ($data['order'] == 'DESC')) 
+	if (isset($data['order']) && ($data['order'] == 'DESC'))
 	{
 			$sql .= " DESC, LCASE(p.name) DESC";
 	} else {
 			$sql .= " ASC, LCASE(p.name) ASC";
 	}
-	
+
 	// Phân trang
-	if (isset($data['start']) || isset($data['limit'])) 
+	if (isset($data['start']) || isset($data['limit']))
 	{
-		if ($data['start'] < 0) 
+		if ($data['start'] < 0)
 		{
 			$data['start'] = 0;
 		}
 
-		if ($data['limit'] < 1) 
+		if ($data['limit'] < 1)
 		{
 			$data['limit'] = 20;
 		}
 
 		$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 	}
-	
+
 	return db_q($sql);
 }
 
 
 /**
- * 
+ *
  * @return array Mảng chỉ số. Mỗi phần tử là một mảng kết hợp biểu diễn sản phẩm nổi bật.
  * @abstract Lấy ra danh sách các sản phẩm nổi bật. Danh sách này được ấn định một cách
  			tùy ý từ màn hình quản trị.
  			ĐỪNG dùng hàm productInfo() ở đây vì nó sẽ gây chậm, do hàm này có nhiều
  			tác vụ con bên trong. hàm productDetails() chạy nhanh hơn.
- 			
+
  	Hàm kiểu này không nặng nề chuyện lọc/tìm kiếm, sắp xếp, phân trang.
  	Chỉ đơn giản là lấy ra vài bản ghi và hiện lên cho có.
- 	
+
  	@version 2021.04.28 14h40
- 	
+
  	@todo Bổ sung tham số dạng mảng cho hàm này với các key:
  	'limit': giới hạn số bản ghi.
  	'img_w': độ rộng ảnh sản phẩm nổi bật trên trang chủ (product_box_image_width)
@@ -1208,14 +1208,14 @@ function productFeatureds( $data=array() )
     $limit = ( isset($data['limit']) && (int)$data['limit'] > 0 ) ? (int)$data['limit'] : 3;
     $width = ( isset($data['width']) && (int)$data['width'] > 0 ) ? (int)$data['width'] : 160;
     $height = ( isset($data['height']) && (int)$data['height'] > 0 ) ? (int)$data['height'] : 90;
-    
+
     if(isset($data['text_length']) && (int)$data['text_length'] > 0)
     {
         $text_length = (int)$data['text_length'];
     } else {
         $text_length = 100;
     }
-	
+
     // Câu truy vấn tường minh, liệt kê rõ các cột cần lấy dữ liệu,
     // không nên viết kiểu ngầm định: SELECT DISCTINCT *
 	$sql = "
@@ -1233,7 +1233,7 @@ function productFeatureds( $data=array() )
 		LEFT JOIN `manufacturer` m ON (p.manufacturer_id = m.manufacturer_id)
 		WHERE p.status = '1' AND p.featured = '1'
 	";
-	
+
 	// Lấy ra dữ liệu thô: danh sách các sản phẩm nổi bật
 	// và giới hạn số lượng hiển thị trên html.
 	$rs = db_q($sql);
@@ -1242,31 +1242,31 @@ function productFeatureds( $data=array() )
 	// Duyệt mảng dữ liệu thô theo kiểu tham chiếu (&) thì mới can thiệp, chỉnh sửa, bổ sung
 	// dữ liệu gốc của mỗi dòng bản ghi truy vấn được.
 	// Định dạng lại dữ liệu của mỗi bản ghi để dễ hiểu hơn với người dùng cuối
-	foreach ($rs as &$row) 
+	foreach ($rs as &$row)
 	{
 	    // Địa chỉ web http dẫn tới ảnh gốc
 	   $row['img_src'] = URL_IMAGE.$row['image'];
 	   $row['url_image'] = URL_IMAGE.$row['image'];
-	   
+
 	   // Địa chỉ web http dẫn tới ảnh bị chỉnh kích thước
 	   $row['thumb'] = url_image_resized($row['image'], $width, $height);
 	   $row['url_image_resized'] = url_image_resized($row['image'], $width, $height);
-	   
+
 	   // Mô tả sản phẩm
 	   $row['description_short'] = text_short($row['description'], $text_length);
 	   $row['desc_short'] = text_short($row['description'], $text_length);
-	   
+
 	   // Đơn giá theo việt nam đồng, có dấu phảy ngăn cách phần nghìn
 	   $row['price_text']  = price_text_vnd($row['price']);
-	   
+
 	   $row['href'] = "/product-info.php?product_id=" . $row['product_id'];
 	   $row['href_man'] = '/manufacturer-info.php?manufacturer_id=' . $row['manufacturer_id'];
 	   $row['manufacturer_href']    = '/manufacturer-info.php?manufacturer_id=' . $row['manufacturer_id'];
 	}
-	
+
 	// Cắt bớt mảng theo giới hạn mà phía chương trình khách yêu cầu.
 	$rs = array_slice($rs, 0, $limit);
-	
+
 	return $rs;
 }// end function productFeatureds()
 
@@ -1278,7 +1278,7 @@ function productFeatureds( $data=array() )
  tùy ý từ màn hình quản trị.
  ĐỪNG dùng hàm productInfo() ở đây vì nó sẽ gây chậm, do hàm này có nhiều
  tác vụ con bên trong. hàm productDetails() chạy nhanh hơn.
- 
+
  Hàm kiểu này không nặng nề chuyện lọc/tìm kiếm, sắp xếp, phân trang.
  	Chỉ đơn giản là lấy ra vài bản ghi và hiện lên cho có.
  */
@@ -1288,14 +1288,14 @@ function productBestSellers($data=array())
     $limit = ( isset($data['limit']) && (int)$data['limit'] > 0 ) ? (int)$data['limit'] : 3;
     $width = ( isset($data['width']) && (int)$data['width'] > 0 ) ? (int)$data['width'] : 160;
     $height = ( isset($data['height']) && (int)$data['height'] > 0 ) ? (int)$data['width'] : 90;
-    
+
     if(isset($data['text_length']) && (int)$data['text_length'] > 0)
     {
         $text_length = (int)$data['text_length'];
     } else {
         $text_length = 100;
     }
-    
+
     // Câu truy vấn tường minh, liệt kê rõ các cột cần lấy dữ liệu,
     // không nên viết kiểu ngầm định: SELECT DISCTINCT *
     $sql = "
@@ -1313,13 +1313,13 @@ function productBestSellers($data=array())
 		LEFT JOIN `manufacturer` m ON (p.manufacturer_id = m.manufacturer_id)
 		WHERE p.status = '1' AND p.best_seller = '1'
 	";
-    
+
     // Lấy ra danh sách các sản phẩm bán chạy
     // và giới hạn số lượng hiển thị trên html.
     // Lấy ra dữ liệu thô: danh sách các sản phẩm nổi bật
     // và giới hạn số lượng hiển thị trên html.
     $rs = db_q($sql);
-    
+
     // bổ sung dữ liệu phái sinh, có định dạng dễ hiểu với người dùng cuối.
     // Duyệt mảng dữ liệu thô theo kiểu tham chiếu (&) thì mới can thiệp, chỉnh sửa, bổ sung
     // dữ liệu gốc của mỗi dòng bản ghi truy vấn được.
@@ -1329,26 +1329,26 @@ function productBestSellers($data=array())
         // Địa chỉ web http dẫn tới ảnh gốc
         $row['img_src'] = URL_IMAGE.$row['image'];
         $row['url_image'] = URL_IMAGE.$row['image'];
-        
+
         // Địa chỉ web http dẫn tới ảnh bị chỉnh kích thước
         $row['thumb'] = url_image_resized($row['image'], $width, $height);
         $row['url_image_resized'] = url_image_resized($row['image'], $width, $height);
-        
+
         // Mô tả sản phẩm
         $row['description_short'] = text_short($row['description'], $text_length);
         $row['desc_short'] = text_short($row['description'], $text_length);
-        
+
         // Đơn giá theo việt nam đồng, có dấu phảy ngăn cách phần nghìn
         $row['price_text']  = price_text_vnd($row['price']);
-        
+
         $row['href'] = "/product-info.php?product_id=" . $row['product_id'];
         $row['href_man'] = '/manufacturer-info.php?manufacturer_id=' . $row['manufacturer_id'];
         $row['manufacturer_href']    = '/manufacturer-info.php?manufacturer_id=' . $row['manufacturer_id'];
     }
-    
+
     // Cắt bớt mảng theo giới hạn mà phía chương trình khách yêu cầu.
     $rs = array_slice($rs, 0, $limit);
-    
+
     return $rs;
 }// end function
 
@@ -1361,10 +1361,10 @@ function productImages($product_id)
 {
 	// Nhặt ra các bản ghi trong bảng
 	$temp = db_q("SELECT `image` FROM `product_image` WHERE `product_id`='{$product_id}'");
-	
+
 	// sau đó copy các đường dẫn ảnh vào trong một mảng:
 	$images = array();
-	
+
 	if(is_array($temp) && !empty($temp))
 	{
 		foreach($temp as $img)
@@ -1372,8 +1372,8 @@ function productImages($product_id)
 			$images[] = $img['image'];
 		}
 	}
-	
+
 	return $images;
-		
-	
+
+
 }// end function

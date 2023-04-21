@@ -5,7 +5,7 @@
     </div>
 </ul>
 <div class="container">
-    
+
     <div class="row">
         <div id="content" class="col-sm-12">
             <div class="row">
@@ -28,15 +28,18 @@
                     <?php } ?>
                 </div>
                 <div class="col-sm-6">
-                    <div class="btn-group">
-                        <button type="button" data-toggle="tooltip" class="btn btn-default" title="Wishlist" onclick="wishlist.add('<?php echo $product_info['product_id']; ?>');"><i class="fa fa-heart"></i></button>
-                        <button type="button" data-toggle="tooltip" class="btn btn-default" title="So sánh sản phẩm" onclick="compare.add('<?php echo $product_info['product_id']; ?>');"><i class="fa fa-exchange"></i></button>
-                    </div>
-                    <h1><?php echo $product_info['name']; ?></h1>
-                    <ul class="list-unstyled">
-                        <li>Nhà sản xuất: <a href="<?php echo $product_info['manufacturer_href']; ?>"><?php echo $product_info['manufacturer']; ?></a></li>
-                        <li>Model: <?php echo $product_info['model']; ?></li>
-                        <li>Tình trạng: <?php echo $product_info['availability']; ?></li>
+                    <h1 style="margin-top:0"><?php echo $product_info['name']; ?></h1>
+                    <ul class="list-unstyled" style="margin-top:20px">
+                        <li style="font-size:16px;color:#333; margin-bottom:10px">Nhà Sản Xuất: <a style="color:red; font-weight:bold; margin-lèt:5px" href="<?php echo $product_info['manufacturer_href']; ?>"><?php echo $product_info['manufacturer']; ?></a></li>
+                        <li style="font-size:16px;color:#333; margin-bottom:10px">Model: <a style="color:red; font-weight:bold; margin-lèt:5px"> <?php echo $product_info['model']; ?></a></li>
+                        <li style="font-size:16px;color:#333; margin-bottom:10px">Tình Trạng: <a style="color:red; font-weight:bold; margin-lèt:5px"><?php echo $product_info['availability']; ?></a></li>
+                        <li style="font-size:16px;color:#333; margin-bottom:10px; display:flex; align-items:center">Đánh Giá:
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#f9ca24" width="25px" height="25px" viewBox="0 0 32 32" version="1.1"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <title>star</title> <path d="M3.488 13.184l6.272 6.112-1.472 8.608 7.712-4.064 7.712 4.064-1.472-8.608 6.272-6.112-8.64-1.248-3.872-7.808-3.872 7.808z"/> </g></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#f9ca24" width="25px" height="25px" viewBox="0 0 32 32" version="1.1"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <title>star</title> <path d="M3.488 13.184l6.272 6.112-1.472 8.608 7.712-4.064 7.712 4.064-1.472-8.608 6.272-6.112-8.64-1.248-3.872-7.808-3.872 7.808z"/> </g></svg><svg xmlns="http://www.w3.org/2000/svg" fill="#f9ca24" width="25px" height="25px" viewBox="0 0 32 32" version="1.1"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <title>star</title> <path d="M3.488 13.184l6.272 6.112-1.472 8.608 7.712-4.064 7.712 4.064-1.472-8.608 6.272-6.112-8.64-1.248-3.872-7.808-3.872 7.808z"/> </g></svg><svg xmlns="http://www.w3.org/2000/svg" fill="#f9ca24" width="25px" height="25px" viewBox="0 0 32 32" version="1.1"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <title>star</title> <path d="M3.488 13.184l6.272 6.112-1.472 8.608 7.712-4.064 7.712 4.064-1.472-8.608 6.272-6.112-8.64-1.248-3.872-7.808-3.872 7.808z"/> </g></svg><svg xmlns="http://www.w3.org/2000/svg" fill="#f9ca24" width="25px" height="25px" viewBox="0 0 32 32" version="1.1"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"> <title>star</title> <path d="M3.488 13.184l6.272 6.112-1.472 8.608 7.712-4.064 7.712 4.064-1.472-8.608 6.272-6.112-8.64-1.248-3.872-7.808-3.872 7.808z"/> </g></svg>
+                        </div>
+                    </li>
+
                     </ul>
                     <ul class="list-unstyled">
                         <li>
@@ -44,12 +47,14 @@
                         </li>
                     </ul>
                     <div id="product">
-                        <div class="form-group">
-                            <label class="control-label" for="input-quantity">Số lượng</label>
-                            <input type="text" name="quantity" value="1" size="2" id="input-quantity" class="form-control" />
-                            <input type="hidden" name="product_id" value="<?php echo $_GET['product_id']; ?>" />
+                        <div class="form-group pt-3">
+                            <div class="d-flex align-items-center">
+                                <h3 class="control-label font-weight-bold font-size" for="input-quantity">Số Lượng : </h3>
+                                <input type="text" name="quantity" value="1" size="2" id="input-quantity" class="form-control product-info-form-control" />
+                                <input type="hidden" name="product_id" value="<?php echo $_GET['product_id']; ?>" />
+                            </div>
                             <br />
-                            <button onclick="" type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary btn-lg btn-block">Thêm vào giỏ hàng</button>
+                            <button onclick="" type="button" id="button-cart" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-outline-primary btn-lg btn-block w-50 py-3 mt-4">Thêm vào giỏ hàng</button>
                         </div>
                         <?php if ($minimum > 1) { ?>
                             <div class="alert alert-info"><i class="fa fa-info-circle"></i> Tối thiểu</div>
@@ -57,7 +62,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!--  trước đây là sản phẩm nổi bật, có thể xem lại code trong view-product-info.php -->
 
             <?php if ($tags) { ?>
@@ -130,7 +135,7 @@
 
                     //$('#cart > ul').load('index.php?route=common/cart/info ul li');
                     // tải lại nội dung html của giỏ hàng bằng (ajax load) lấy từ nguồn: /common/cart-info.php
-                    // chỉ lấy phần nội dung bên trong phần tử html có id="cart" 
+                    // chỉ lấy phần nội dung bên trong phần tử html có id="cart"
                     // sau đó đắp phần html đó vào bên trong phần tử id="cart" của trang hiện tại.
                     $('#cart').load('/cart-ajax.php#cart > *');
                 }
