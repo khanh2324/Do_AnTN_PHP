@@ -14,9 +14,9 @@
       -->
       <!-- HTML5 cho phép 1 button nằm ngoài form mà vẫn submit được, miễn là button đó chỉ rõ form nào qua id và action là gì ? -->
       <div class="pull-left">
-        <a disabled href="#đang_chờ" data-toggle="tooltip" title="đang_chờ" class="btn btn-primary"><i class="fa fa-question"></i></a>
+        <!-- <a disabled href="#đang_chờ" data-toggle="tooltip" title="đang_chờ" class="btn btn-primary"><i class="fa fa-question"></i></a>
         <button disabled type="submit" form="form-product" formaction="#đang_chờ" data-toggle="tooltip" title="đang-chờ" class="btn btn-default"><i class="fa fa-question"></i></button>
-        <button disabled type="button" data-toggle="tooltip" title="đang_chờ" class="btn btn-danger" onclick="confirm('<?php echo 'đang chờ'; ?>');"><i class="fa fa-question"></i></button>
+        <button disabled type="button" data-toggle="tooltip" title="đang_chờ" class="btn btn-danger" onclick="confirm('<?php echo 'đang chờ'; ?>');"><i class="fa fa-question"></i></button> -->
       </div>
     </div>
   </div>
@@ -115,7 +115,7 @@
                   	<a href="<?php echo $sort_product_id;?>" class="<?php if ($sort == 'p.product_id') {echo strtolower($order);} ?>">Id</a>
                   </td>
                   <td class="text-center"><?php echo 'Ảnh'; ?></td>
-                  <td class="text-left">
+                  <td class="text-left aaaa">
                     <a href="<?php echo $sort_name; ?>" class="<?php if ($sort == 'p.name') {echo strtolower($order);} ?>"><?php echo 'Tên Sản Phẩm'; ?></a>
                   </td>
                   <td class="text-left">

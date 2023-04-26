@@ -39,11 +39,13 @@
 
     <SCRIPT src="/ui/home/opencart_000/template_files/jquery-2.1.1.min.js" type="text/javascript"></SCRIPT>
     <SCRIPT src="/ui/home/opencart_000/template_files/bootstrap.min.js" type="text/javascript"></SCRIPT>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-        crossorigin="anonymous"></script> -->
+    
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+    
     <SCRIPT src="/ui/home/opencart_000/template_files/common.js" type="text/javascript"></SCRIPT>
     <SCRIPT src="/ui/home/opencart_000/view/cart.js" type="text/javascript"></SCRIPT>
     <SCRIPT src="/ui/home/opencart_000/template_files/jquery.flexslider-min.js" type="text/javascript"></SCRIPT>
@@ -52,39 +54,12 @@
     <script src="/ui/src/js/jquery/plugins/magnific/jquery.magnific-popup.min.js" type="text/javascript"></script>
 
 
-
     <META name="GENERATOR" content="MSHTML 11.00.9600.16384">
 </HEAD>
 
 <BODY class="common-home">
     <NAV id="top">
         <DIV class="container">
-            <!--
-            <DIV class="pull-left">
-                <FORM id="currency" action="https://demo.opencart.com/index.php?route=common/currency/currency" enctype="multipart/form-data" method="post">
-                     <DIV class="btn-group">
-                        <BUTTON class="btn btn-link dropdown-toggle" data-toggle="dropdown"><STRONG>$</STRONG>
-<SPAN class="hidden-xs hidden-sm hidden-md">Currency</SPAN> <I class="fa fa-caret-down"></I></BUTTON>
-                        <UL class="dropdown-menu">
-                            <LI>
-                                <BUTTON name="EUR" class="currency-select btn btn-link btn-block" type="button">€
-  Euro</BUTTON>
-                            </LI>
-                            <LI>
-                                <BUTTON name="GBP" class="currency-select btn btn-link btn-block" type="button">£
-  Pound Sterling</BUTTON>
-                            </LI>
-                            <LI>
-                                <BUTTON name="USD" class="currency-select btn btn-link btn-block" type="button">$
-  US Dollar</BUTTON>
-                            </LI>
-                        </UL>
-                    </DIV>
-                    <INPUT name="code" type="hidden">
-                    <INPUT name="redirect" type="hidden" value="https://demo.opencart.com/index.php?route=common/home">
-                </FORM>
-            </DIV>
-             -->
             <DIV class="nav pull-right" id="top-links">
                 <UL class="list-inline">
                     <LI>
@@ -129,7 +104,7 @@
                     <LI>
                         <A title="Wish List (0)" id="wishlist-total" href="#"><I class="fa fa-heart"></I> <SPAN class="hidden-xs hidden-sm hidden-md">Wish List (0)</SPAN></A>
                     </LI>
-                     -->
+                    -->
                     <LI>
                         <A title="Shopping Cart" href="/cart.php"><I class="fa fa-shopping-cart"></I> <SPAN
                                 class="hidden-xs hidden-sm hidden-md">Giỏ Hàng</SPAN></A>

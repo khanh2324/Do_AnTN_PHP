@@ -17,7 +17,7 @@
 <body>
   <div class="login">
     <div class="login-box">
-      <h2>Login Admin</h2>
+      <h2>Admin Login</h2>
 
       <?php if ($_SESSION["ERROR_TEXT"]) { ?>
         <div class="alert alert-danger alert-dismissible">

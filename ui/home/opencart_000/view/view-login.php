@@ -15,7 +15,7 @@
         <div class="col-sm-6">
           <div class="well">
             <h2>Đã có Tài Khoản</h2>
-            <p><strong>Tôi là khách hàng rất rất cũ</strong></p>
+            <!-- <p><strong>Tôi là khách hàng rất rất cũ</strong></p> -->
             <?php if ($_SESSION['ERROR_TEXT']) {?>
 		      	<div class="alert alert-danger">
 		        	<i class="fa fa-exclamation-circle"></i>&nbsp;<?php echo $_SESSION['ERROR_TEXT']?>

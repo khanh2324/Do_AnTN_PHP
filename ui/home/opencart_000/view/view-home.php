@@ -49,9 +49,9 @@
     <div class="row">
         <!-- START SẢN PHẨM NỔI BẬT -->
         <!-- <h3 class="brand">Thú Cưng Nổi Bật</h3> -->
-        <div class="row product-layout yourclass">
+        <div class="row product-layout ">
             <?php foreach (productFeatureds(['width' => 200, 'height' => 200, 'limit' => settings('products_featured_limit')]) as $product) { ?>
-                <div class="col-lg-3 col-md-3 col-sm-6">
+                <div class="col-lg-3 col-md-6 col-sm-12">
                     <div class="product-thumb transition">
                         <div class="image">
                             <a href="<?php echo $product['href']; ?>">
@@ -61,9 +61,9 @@
                         </div>
                         <div class="caption">
                             <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
-                            <p>
+                            <h5>
                                 <?php echo $product['desc_short']; ?>
-                            </p>
+                            </h5>
                             <p class="price">
                                 <span class="price-new">
                                     <?php echo $product['price_text']; ?>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="button-group">
                             <button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>');"><i
-                                    class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Thêm vào
+                                    class="fa fa-shopping-cart"></i> <span class="">Thêm vào
                                     giỏ</span></button>
                             <!-- <button type="button" data-toggle="tooltip" title="" onclick="alert('đang xây dựng...');//wishlist.add('30');" data-original-title="Add to Wish List"><i class="fa fa-heart"></i></button>
                             <button type="button" data-toggle="tooltip" title="" onclick="compare.add('<?php echo $product['product_id'] ?>');" data-original-title="So sánh sản phẩm"><i class="fa fa-exchange"></i></button> -->
@@ -104,9 +104,9 @@
     <div class="row">
         <!-- START SẢN PHẨM NỔI BẬT -->
         <!-- <h3 class="brand">Thú Cưng Nổi Bật</h3> -->
-        <div class="row product-layout yourclass">
+        <div class="row product-layout ">
             <?php foreach (productBestSellers(['width' => 200, 'height' => 200, 'limit' => settings('products_featured_limit')]) as $product) { ?>
-                <div class="col-lg-3 col-md-3 col-sm-6">
+                <div class="col-lg-3 col-md-6 col-sm-12">
                     <div class="product-thumb transition">
                         <div class="image">
                             <a href="<?php echo $product['href']; ?>">
@@ -116,9 +116,9 @@
                         </div>
                         <div class="caption">
                             <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
-                            <p>
+                            <h5>
                                 <?php echo $product['desc_short']; ?>
-                            </p>
+                            </h5>
                             <p class="price">
                                 <span class="price-new">
                                     <?php echo $product['price_text']; ?>
@@ -131,7 +131,7 @@
                         </div>
                         <div class="button-group">
                             <button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>');"><i
-                                    class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Thêm vào
+                                    class="fa fa-shopping-cart"></i> <span class="">Thêm vào
                                     giỏ</span></button>
                             <!-- <button type="button" data-toggle="tooltip" title="" onclick="alert('đang xây dựng...');//wishlist.add('30');" data-original-title="Add to Wish List"><i class="fa fa-heart"></i></button>
                             <button type="button" data-toggle="tooltip" title="" onclick="compare.add('<?php echo $product['product_id'] ?>');" data-original-title="So sánh sản phẩm"><i class="fa fa-exchange"></i></button> -->
@@ -140,21 +140,23 @@
                 </div>
             <?php } ?>
         </div>
-        <h3 class="brand">Nhãn Hàng Nổi Bật</h3>
         <!-- SLIDE SHOW ẢNH LOGO CÁC HÃNG SẢN XUẤT -->
-        <div id="carousel0" class="flexslider carousel">
-            <ul class="slides"
-                style="width: 100%;transition-duration: 0.6s;">
-
-                <?php foreach (manufacturerFeatureds(['width' => 100, 'height' => 100, 'limit' => settings('manufacturers_featured_limit')]) as $manufacturer) { ?>
-                    <li style="width: 208px;padding-left: 16px; float: left; display: block;">
-                        <a href="<?php echo $manufacturer['href']; ?>">
-                            <img src="<?php echo $manufacturer['thumb']; ?>" alt="<?php echo $manufacturer['name']; ?>"
-                                class="img-responsive" draggable="false" />
-                        </a>
-                    </li>
-                <?php } ?>
-            </ul>
+        <div>
+            <h3 class="brand">Nhãn Hàng Nổi Bật</h3>  
+            <div id="carousel0" class="flexslider carousel">
+                <ul class="slides"
+                    style="width: 100%;transition-duration: 0.6s;">
+    
+                    <?php foreach (manufacturerFeatureds(['width' => 100, 'height' => 100, 'limit' => settings('manufacturers_featured_limit')]) as $manufacturer) { ?>
+                        <li style="width: 208px;padding-left: 16px; float: left; display: block;">
+                            <a href="<?php echo $manufacturer['href']; ?>">
+                                <img src="<?php echo $manufacturer['thumb']; ?>" alt="<?php echo $manufacturer['name']; ?>"
+                                    class="img-responsive" draggable="false" />
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </div>
         </div>
 
         <script type="text/javascript">
@@ -168,15 +170,6 @@
                 });
             });
         </script>
-
-
-        <!-- Google Map  -->
-        <h3 class="brand">Địa chỉ của chúng tôi</h3>
-        <div style="height: 400px;position: relative; background-color: rgb(229, 227, 223); overflow: hidden; padding:0; width:100%"
-            id="google-map" class="col-sm-12">
-            <?php echo html_google_map(); ?>
-        </div>
-
     </div>
 </div>
 </div>
@@ -187,11 +180,11 @@
             <div class="col-sm-12">
                 <!-- Introduce -->
                 <div class="introduce">
-                    <div class="col introduce__header">
-                        <h2>Giới thiệu</h2>
+                    <div class="introduce__header">
+                        <div>Giới thiệu</div>
                     </div>
-                    <div class="row col introduce__container flex-sp">
-                        <div class="col-6 col-sm-12 introduce__content">
+                    <div class="row introduce__container flex-sp">
+                        <div class="col-lg-6 col-sm-12 introduce__content">
                             <div class="introduce__content-wrap">
                                 <div class="introduce__content-text">
                                     <span><span class="introduce-text-header">
@@ -211,7 +204,7 @@
                             </div>
                         </div>
 
-                        <div class="col-6 col-sm-12 introduce__img">
+                        <div class="col-lg-6 col-sm-12 introduce__img">
                             <div class="introduce__img-wrap">
                                 <img src="https://monspet.com/wp-content/uploads/2019/07/shaking-hands8.jpg" alt="">
                             </div>
@@ -228,7 +221,7 @@
                 <?php foreach (categoryFeatureds(['width' => 370, 'height' => 240, 'limit' => settings('categories_featured_limit')]) as $category) { ?>
                     <div class="col-sm-4 col-xs-12">
                         <a href="<?php echo $category['href']; ?>" class="product-home-image">
-                            <div class="s-desc" style="">
+                            <div class="s-desc">
                                 <h3 >
                                     <?php echo $category['name']; ?>
                                 </h3>
@@ -256,7 +249,7 @@
                 </div>
             </div>
 
-            <div class="row commit__content yourclass">
+            <div class="row commit__content ">
                 <div class="col-md-4 col-sm-12 commit__content-wrap">
                     <div class="commit__content-icon">
                         <img src="https://monspet.com/wp-content/uploads/2019/07/i1-1.png" alt="">
@@ -300,23 +293,32 @@
                 sẽ ít hơn.</div>
         </div>
 
-        <div class="row col friends__wrap yourclass">
-            <div class="col-lg-3 col-md-6 col-md-12 friends-img">
+        <div class="row friends__wrap">
+            <div class="col-lg-3 col-md-6 col-sm-12 friends-img">
                 <img src="https://monspet.com/wp-content/uploads/2019/07/meo.jpg" alt="">
                 <div class="friends__name-item"> <i>Mèo</i></div>
             </div>
-            <div class="col-lg-3 col-md-6 col-md-12 friends-img">
+            <div class="col-lg-3 col-md-6 col-sm-12 friends-img">
                 <img src="https://monspet.com/wp-content/uploads/2019/07/hamster.jpg" alt="">
                 <div class="friends__name-item"> <i>Hamster</i></div>
             </div>
-            <div class="col-lg-3 col-md-6 col-md-12 friends-img">
+            <div class="col-lg-3 col-md-6 col-sm-12 friends-img">
                 <img src="https://monspet.com/wp-content/uploads/2019/07/cho.jpg" alt="">
                 <div class="friends__name-item"> <i>Chó</i></div>
             </div>
-            <div class="col-lg-3 col-md-6 col-md-12 friends-img">
+            <div class="col-lg-3 col-md-6 col-sm-12 friends-img">
                 <img src="https://monspet.com/wp-content/uploads/2019/07/chim.jpg" alt="">
                 <div class="friends__name-item"> <i>Chim</i></div>
             </div>
         </div>
+
+
+         <!-- Google Map  -->
+        <h3 class="brand">Địa chỉ của chúng tôi</h3>
+        <div style="height: 400px;position: relative; background-color: rgb(229, 227, 223); overflow: hidden; padding:0; width:100%"
+            id="google-map" class="col-sm-12">
+            <?php echo html_google_map(); ?>
+        </div>
     </div>
 </div>
+

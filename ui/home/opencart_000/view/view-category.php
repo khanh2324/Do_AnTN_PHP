@@ -106,7 +106,7 @@
         </div>
       </div>
       <br />
-      <div class="row yourclass">
+      <div class="row">
         <?php foreach ($productsByCategory as $product) { ?>
         <div class="product-layout product-list col-xs-12">
           <div class="product-thumb">

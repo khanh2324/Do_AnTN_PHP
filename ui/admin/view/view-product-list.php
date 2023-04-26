@@ -14,9 +14,9 @@
       -->
       <!-- HTML5 cho phép 1 button nằm ngoài form mà vẫn submit được, miễn là button đó chỉ rõ form nào qua id và action là gì ? -->
       <div class="pull-left">
-        <a disabled href="#đang_chờ" data-toggle="tooltip" title="đang_chờ" class="btn btn-primary"><i class="fa fa-question"></i></a>
+        <!-- <a disabled href="#đang_chờ" data-toggle="tooltip" title="đang_chờ" class="btn btn-primary"><i class="fa fa-question"></i></a>
         <button disabled type="submit" form="form-product" formaction="#đang_chờ" data-toggle="tooltip" title="đang-chờ" class="btn btn-default"><i class="fa fa-question"></i></button>
-        <button disabled type="button" data-toggle="tooltip" title="đang_chờ" class="btn btn-danger" onclick="confirm('<?php echo 'đang chờ'; ?>');"><i class="fa fa-question"></i></button>
+        <button disabled type="button" data-toggle="tooltip" title="đang_chờ" class="btn btn-danger" onclick="confirm('<?php echo 'đang chờ'; ?>');"><i class="fa fa-question"></i></button> -->
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@
                 <label class="control-label" for="input-model"><?php echo 'Model'; ?></label>
                 <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="Model" id="input-model" class="form-control" />
               </div>
-              <div class="form-group">
+                <div class="form-group">
 	                <label class="control-label" for="input-best_seller">Bán Chạy</label>
 	                <select name="filter_best_seller" id="input-best_seller" class="form-control">
 	                  <option value="*">--Không chọn--</option>
@@ -177,7 +177,7 @@
                     <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
                     <?php } ?>
                   </td>
-                  <td class="text-left"><?php echo $product['name']; ?></td>
+                  <td class="text-left"><a href="/product-info.php?product_id=<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></a></td>
                   <td class="text-left"><?php echo $product['model']; ?></td>
                   <td class="text-left"><?php echo $product['price']; ?></td>
                   <td class="text-left"><?php echo $product['status_text']; ?></td>

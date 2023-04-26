@@ -4,11 +4,7 @@
 
  */
 
-// Thiết lập chế độ hiển thị lỗi.
-// 0: tắt đi mọi báo lỗi
-// E_ALL: hiển thị mọi lỗi
-// E_ERROR | E_WARNING | E_PARSE: Hiển thị các lỗi lúc chạy
-// E_ERROR = 1
+
 error_reporting(1);
 // Khởi tạo phiên kết nối client (máy khách) <-> server (máy chủ)
 session_start();
