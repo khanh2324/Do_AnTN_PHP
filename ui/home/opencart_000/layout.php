@@ -70,6 +70,13 @@
 				</DIV>
 				<i class="fa fa-bars menu-icon-sp sp"></i>
 				<ul class="nav navbar-nav col-sm-8 header-menu_nav menu-sp d-md-none d-lg-block">
+				<DIV class="d-block d-md-none mt-4 mb-4">
+						<DIV class="input-group" id="search">
+						<INPUT name="search" class="form-control input-lg" type="text" placeholder="Tìm kiếm..." value="">
+						<BUTTON class="btn-search" type="button"><I class="fa fa-search"></I></BUTTON>
+						</DIV>
+					</DIV>
+
 					<?php foreach (categoryGetAllForMenuHomePage() as $category) { ?>
 						<?php if ($category['children']) { ?>
 							<li class="dropdown position-relative">
@@ -92,13 +99,6 @@
 							</li>
 						<?php } ?>
 					<?php } ?>
-
-					<!-- <DIV class="d-block d-md-none">
-					<DIV class="input-group" id="search">
-						<INPUT name="search" class="form-control input-lg" type="text" placeholder="Tìm kiếm..." value="">
-						<BUTTON class="btn-search" type="button"><I class="fa fa-search"></I></BUTTON>
-					</DIV> -->
-				</DIV>
 				</ul>
 			</DIV>
 		</div>

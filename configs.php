@@ -1,9 +1,4 @@
 <?php
-/**
- * Copyright C2009G
-
- */
-
 
 error_reporting(1);
 // Khởi tạo phiên kết nối client (máy khách) <-> server (máy chủ)
@@ -15,11 +10,10 @@ define('DB_USER', 'root');
 define('DB_PASS', '');			    
 
 $home_themes = 'opencart_000';
-$admin_themes = 'flat_000'; 
+$admin_themes = 'flat_002';
 $adminlogin_themes = 'material_001'; 
 
-// Đường dẫn tuyệt đối đến thư mục ảnh của toàn bộ hệ thống
-// Ví dụ: C:/xampp/htdocs/web/image
+
 // Kho Ảnh
 define('FOLDER_IMAGE', 'images'); // sửa_Thư_Mục_Ảnh_đi
 define('DIR_IMAGE', $_SERVER["DOCUMENT_ROOT"]."/".FOLDER_IMAGE."/");
@@ -35,9 +29,7 @@ global $web_pagination_controls; // phân trang
 global $web_pagination_results;
 global $active_page_admin; // trang hiện thời gắn liền với menu bị nhấp chuột.
 
-// Tải các hàm toàn cục (global functions) để xử lý các tác vụ chung
-// như truy vấn cơ sở dữ liệu, phân trang, giỏ hàng, dữ liệu phiên v.v...)
-// các hàm này được gọi bởi hầu hết các trang php 
+
 include_once 'lib/db.php';
 include_once 'lib/global.php';
 include_once 'lib/tool.image.php';

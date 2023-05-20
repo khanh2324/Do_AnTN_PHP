@@ -50,22 +50,6 @@
                 <label class="control-label" for="input-model"><?php echo 'Model'; ?></label>
                 <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="Model" id="input-model" class="form-control" />
               </div>
-                <div class="form-group">
-	                <label class="control-label" for="input-best_seller">Bán Chạy</label>
-	                <select name="filter_best_seller" id="input-best_seller" class="form-control">
-	                  <option value="*">--Không chọn--</option>
-	                  <?php if ($filter_best_seller) { ?>
-	                  <option value="1" selected="selected">Bán chạy</option>
-	                  <?php } else { ?>
-	                  <option value="1">Bán chạy</option>
-	                  <?php } ?>
-	                  <?php if (!$filter_best_seller && !is_null($filter_best_seller)) { ?>
-	                  <option value="0" selected="selected">Không bán chạy</option>
-	                  <?php } else { ?>
-	                  <option value="0">Không bán chạy</option>
-	                  <?php } ?>
-	                </select>
-	              </div>
             </div>
             
             <div class="col-sm-4">
@@ -92,7 +76,7 @@
             </div>
             
             <div class="col-sm-4">
-            	<div class="form-group">
+            	<!-- <div class="form-group">
 	                <label class="control-label" for="input-limit">Phân Trang</label>
 	                <select name="filter_limit" id="input-limit" class="form-control">
 	                  <option value="*">--Không chọn--</option>
@@ -102,7 +86,25 @@
 	                  <option value="20" <?php if ($limit==20) echo 'selected="selected"';?>>20</option>
 	                  <option value="25" <?php if ($limit==25) echo 'selected="selected"';?>>25</option>
 	                </select>
-	            </div>
+	            </div> -->
+              <div class="form-group">
+	                <label class="control-label" for="input-best_seller">Bán Chạy</label>
+	                <select name="filter_best_seller" id="input-best_seller" class="form-control">
+	                  <option value="*">--Không chọn--</option>
+	                  <?php if ($filter_best_seller) { ?>
+	                  <option value="1" selected="selected">Bán chạy</option>
+	                  <?php } else { ?>
+	                  <option value="1">Bán chạy</option>
+	                  <?php } ?>
+	                  <?php if (!$filter_best_seller && !is_null($filter_best_seller)) { ?>
+	                  <option value="0" selected="selected">Không bán chạy</option>
+	                  <?php } else { ?>
+	                  <option value="0">Không bán chạy</option>
+	                  <?php } ?>
+	                </select>
+	              </div>
+
+
 	             <div class="form-group">
 	                <label class="control-label" for="input-featured">Tính Nổi Bật</label>
 	                <select name="filter_featured" id="input-featured" class="form-control">

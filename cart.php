@@ -1,9 +1,5 @@
 <?php
-/**
- * Copyright C2009G
- *
- * Trang giỏ hàng
- */
+
 // Cấu hình hệ thống
 include_once 'configs.php';
 

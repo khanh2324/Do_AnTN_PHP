@@ -336,6 +336,8 @@ div.required .control-label::before {
     color: rgb(255, 255, 255);
     line-height: 18px;
     font-size: 12px;
+    background-color: #000;
+    border-radius: 4px;
 }
 .open#cart > .btn {
     border: 1px solid rgb(230, 230, 230);
@@ -582,7 +584,7 @@ div.required .control-label::before {
         padding: 0 15px;
     }
     .btn-search{
-        padding: 0;
+        padding-right: 16px;
     }
     .terms > .row{
         margin: 0;
@@ -591,8 +593,16 @@ div.required .control-label::before {
         padding:  10px 15px;
     }
     #top-links{
-        padding: 0;
+        padding: 6px 0;
+        align-items: center;
+        flex-direction: inherit;
     }
+
+    .subnav-menu{
+        top: 112% !important;
+        left: auto !important;
+    }
+
     .dropdown .btn {
         padding: 0;
     }
@@ -663,7 +673,6 @@ div.required .control-label::before {
     }
     #search .input-lg {
         width: 120px;
-        padding: 5px 0;
     }
     .slider-text-heading{
         font-size: 5rem;
